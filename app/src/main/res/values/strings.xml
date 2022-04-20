@@ -17,4 +17,13 @@
     <string name="login_download_gps">Actualizar</string>
     <string name="gps_download_url">market://details?id=com.google.android.gms</string>
     <string name="market_download_url">https://play.google.com/store/apps/details?id=com.google.android.gms</string>
+    <string name="default_client_id">858198745380-e2k6757jbq3t9nf9qvno4vrnom7ijvcc.apps.googleusercontent.com</string>
+    <string name="login_completed">Este Usuario %1$s ha accedido correctamente</string>
+    <string name="login_pass_confirmation_et_hint">Introducir nuevamente la contraseña</string>
+    <string name="login_button_signup_text">Registrar usuario</string>
+    <string name="signup_error_user">El correo no es valido</string>
+    <string name="signup_error_pass">La contraseña no es valida</string>
+    <string name="signup_error_pass_not_match">Las contraseñas no coinciden</string>
+    <string name="signup_created">El usuario se ha registrado correctamente</string>
+    <string name="signup_create_error">Se ha producido un error al registrar el usuario</string>
 </resources>

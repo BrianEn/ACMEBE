@@ -13,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:visibility="gone"
         android:id="@+id/loginProgres"
         style="?android:attr/progressBarStyleLarge"
         />
@@ -43,6 +44,7 @@
                     android:hint="@string/login_email_et_hint"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
+                    android:textSize="24dp"
                     android:singleLine="true"
                     tools:ignore="TouchTargetSizeCheck" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -56,6 +58,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/login_pass_et_hint"
+                    android:textSize="24dp"
+
                     android:inputType="textPassword"
                     tools:ignore="TouchTargetSizeCheck" />
             </com.google.android.material.textfield.TextInputLayout>
