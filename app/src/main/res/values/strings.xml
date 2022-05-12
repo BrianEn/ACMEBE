@@ -26,4 +26,8 @@
     <string name="signup_error_pass_not_match">Las contraseñas no coinciden</string>
     <string name="signup_created">El usuario se ha registrado correctamente</string>
     <string name="signup_create_error">Se ha producido un error al registrar el usuario</string>
+    <string name="location_rationale">Necesitamos tu permiso para conocer tu ubicación</string>
+    <string name="location_rationale_ok">Permitir</string>
+    <string name="location_cancel">Este permiso es importante para la aplicación</string>
+    <string name="open_weather_map_api_key">a2e1e9f2c90f39b5b5637cc5d28ce5f5</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.mis.acmebe;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -9,34 +10,40 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mis.acmebe.adapter.VueloAdapter;
+import com.mis.acmebe.adapter.VueloFavoritoAdapter;
 import com.mis.acmebe.entity.Vuelo;
 
 import java.util.ArrayList;
 
-public class VuelosActivity extends AppCompatActivity {
-    private VueloAdapter vueloAdapter;
+public class VuelosFavoritosActivity extends AppCompatActivity {
+    private VueloFavoritoAdapter vueloFavoritoAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vuelos);
 
-        vueloAdapter = new VueloAdapter();
+        vueloFavoritoAdapter = new VueloFavoritoAdapter();
         RecyclerView incoming_recycler_view = findViewById(R.id.recyclerViewVuelos);
         incoming_recycler_view.setLayoutManager((new LinearLayoutManager(getApplicationContext())));
-        incoming_recycler_view.setAdapter(vueloAdapter);
+        incoming_recycler_view.setAdapter(vueloFavoritoAdapter);
 
-        vueloAdapter.setDataChangedListener(() -> {
-            if (vueloAdapter.getItemCount()>0){
+
+        vueloFavoritoAdapter.setDataChangedListener(() -> {
+            if (vueloFavoritoAdapter.getItemCount()>0){
                 incoming_recycler_view.setVisibility(View.VISIBLE);
             } else {
                 incoming_recycler_view.setVisibility(View.GONE);
             }
-                });
-        vueloAdapter.setErrorListener (error ->{
+        });
+        vueloFavoritoAdapter.setErrorListener (error ->{
             incoming_recycler_view.setVisibility(View.GONE);
         });
         setupActionBar();
@@ -49,8 +56,8 @@ public class VuelosActivity extends AppCompatActivity {
     }
     protected void onDestroy(){
         super.onDestroy();
-        if (vueloAdapter != null && vueloAdapter.listenerRegistration != null)
-            vueloAdapter.listenerRegistration.remove();
+        if (vueloFavoritoAdapter != null && vueloFavoritoAdapter.listenerRegistration != null)
+            vueloFavoritoAdapter.listenerRegistration.remove();
     }
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();

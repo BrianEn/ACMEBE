@@ -21,7 +21,7 @@ RecyclerView recyclerViewVuelosFiltrados;
     }
     private void cargarFiltro(){
         recyclerViewVuelosFiltrados=findViewById(R.id.recyclerViewVuelosFiltrados);
-        recyclerViewVuelosFiltrados.setAdapter(new VueloAdapter(Vuelo.generaVuelos(100)));
+
         recyclerViewVuelosFiltrados.setLayoutManager(new GridLayoutManager(this,1));
     }
 

@@ -1,8 +1,10 @@
 package com.mis.acmebe.entity;
 
 import com.mis.acmebe.MainActivity;
+import com.mis.acmebe.MapActivity;
 import com.mis.acmebe.R;
 import com.mis.acmebe.VuelosActivity;
+import com.mis.acmebe.VuelosFavoritosActivity;
 
 import java.sql.Array;
 import java.util.ArrayList;
@@ -45,7 +47,8 @@ public class Enlace {
     public static List<Enlace> generaEnlace(){
         List<Enlace> lista=new ArrayList<>();
         lista.add(new Enlace("Viajes disponibles", R.drawable.menuvuelo, VuelosActivity.class));
-        lista.add(new Enlace("Viajes seleccionados",R.drawable.menuseleccion,MainActivity.class));
+        lista.add(new Enlace("Viajes seleccionados",R.drawable.menuseleccion, VuelosFavoritosActivity.class));
+        lista.add(new Enlace("Conoce tu ubicación",R.mipmap.ic_location, MapActivity.class));
         return lista;
     }
 }

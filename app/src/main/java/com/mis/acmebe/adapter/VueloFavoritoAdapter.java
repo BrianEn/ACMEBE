@@ -1,8 +1,9 @@
 package com.mis.acmebe.adapter;
 
-import android.app.Activity;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,27 +22,27 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.mis.acmebe.FirestoreService;
-import com.mis.acmebe.MainActivity;
-import com.mis.acmebe.MyApplication;
 import com.mis.acmebe.R;
 import com.mis.acmebe.VueloSingleActivity;
-import com.mis.acmebe.VuelosActivity;
 import com.mis.acmebe.entity.Vuelo;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class VueloAdapter extends RecyclerView.Adapter<VueloAdapter.ViewHolder> implements EventListener<QuerySnapshot> {
+
+
+
+public class VueloFavoritoAdapter extends RecyclerView.Adapter<VueloFavoritoAdapter.ViewHolder> implements EventListener<QuerySnapshot> {
     private final List<Vuelo> vueloList;
     private DataChangedListener mDataChangedListener;
     private ItemErrorListener mErrorListener;
     public final ListenerRegistration listenerRegistration;
     Context context;
-    public VueloAdapter(){
+    public VueloFavoritoAdapter(){
         this.vueloList=new ArrayList<>();
         String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-        listenerRegistration = FirestoreService.getServiceInstance().getTravels((com.google.firebase.firestore.EventListener<QuerySnapshot>) this);
+        listenerRegistration = FirestoreService.getServiceInstance().getTravelsFiltered((com.google.firebase.firestore.EventListener<QuerySnapshot>) this);
     }
 
     @NonNull
@@ -64,8 +65,8 @@ public class VueloAdapter extends RecyclerView.Adapter<VueloAdapter.ViewHolder> 
         holder.imageViewViaje.setOnClickListener(view -> {
             context.startActivity(new Intent(context, VueloSingleActivity.class));
         });
-        Glide.with(context).load(vueloList.get(position).getImagen()).into(holder.imageViewViaje);
-
+        Glide.with(context).load(vueloList.get(position).getImagen()).into(holder.imageViewViaje
+        );
     }
     @Override
     public int getItemCount(){return vueloList.size(); }

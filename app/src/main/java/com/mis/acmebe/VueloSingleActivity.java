@@ -21,10 +21,9 @@ public class VueloSingleActivity extends AppCompatActivity {
 
     ImageView imageViewVuelo;
     ImageButton buttonFavorito;
-    Button buttonComprar;
+    Button buttonComprar, buttonOpinar;
     TextView textViewOrigen2,textViewDestino3,textViewPrecio3,textViewEscala3,textViewFechaSalida2,textViewFechaLlegada2,textViewDescripcion;
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor editor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +37,7 @@ public class VueloSingleActivity extends AppCompatActivity {
         String escala=preferences.getString("escala", defaultValue);
         String salida=preferences.getString("salida", defaultValue);
         String llegada=preferences.getString("llegada", defaultValue);
+        String descripcion=preferences.getString("descripcion", defaultValue);
         String imagen=preferences.getString("imagen",(defaultValue));
 
         textViewOrigen2 =(TextView) findViewById(R.id.textViewOrigen2);
@@ -49,6 +49,7 @@ public class VueloSingleActivity extends AppCompatActivity {
         textViewDescripcion =(TextView) findViewById(R.id.textViewDescripcion);
         imageViewVuelo=(ImageView) findViewById(R.id.imageViewVuelo);
         buttonComprar=(Button) findViewById(R.id.buttonComprar);
+        buttonOpinar=(Button) findViewById(R.id.buttonOpinar);
         buttonFavorito=(ImageButton) findViewById(R.id.buttonFavorito);
 
         textViewOrigen2.setText(origen);
@@ -57,7 +58,7 @@ public class VueloSingleActivity extends AppCompatActivity {
         textViewEscala3.setText(escala);
         textViewFechaSalida2.setText(salida);
         textViewFechaLlegada2.setText(llegada);
-        textViewDescripcion.setText("Vuelos a precios increibles");
+        textViewDescripcion.setText(descripcion);
         imageViewVuelo.setImageResource(Integer.parseInt(imagen));
     }
 
@@ -66,5 +67,10 @@ public class VueloSingleActivity extends AppCompatActivity {
     }
     public void favorito(View view) {
         Snackbar.make(VueloSingleActivity.this.textViewDescripcion, "Vuelo agregado a favoritos", Snackbar.LENGTH_LONG).show();
+
+    }
+
+    public void opina(View view) {
+        setContentView(R.layout.activity_opinion_form);
     }
 }

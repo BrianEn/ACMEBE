@@ -33,8 +33,9 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final int RC_SIGN_IN = 0x152;
+    private static final Integer RC_SIGN_IN = 0x124;
     private FirebaseAuth mAuth;
+    private GoogleSignInClient googleSignIn;
         private Button signinButtonGoogle;
         private Button signinButtonMail;
         private Button loginButtonSignup;
@@ -65,53 +66,20 @@ public class LoginActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
 
-        signinButtonGoogle.setOnClickListener(l -> attempLoginGoogle(googleSignInOptions));
+        googleSignIn = GoogleSignIn.getClient(this, googleSignInOptions);
+
+        signinButtonGoogle.setOnClickListener(l -> attempLoginGoogle());
 
         signinButtonMail.setOnClickListener(l -> attempLoginEmail());
 
         loginButtonSignup.setOnClickListener(l -> redirectSignUpActivity());
+
     }
 
     private void redirectSignUpActivity() {
         Intent intent = new Intent(this, SignUpActivity.class);
         intent.putExtra(SignUpActivity.EMAIL_PARAM, loginEmail.getText().toString());
         startActivity(intent);
-    }
-
-    private void attempLoginGoogle(GoogleSignInOptions googleSignInOptions) {
-        GoogleSignInClient googleSignIn = GoogleSignIn.getClient(this, googleSignInOptions);
-        Intent signInIntent = googleSignIn.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN){
-           Task<GoogleSignInAccount> result = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try{
-             GoogleSignInAccount account = result.getResult(ApiException.class);
-             assert  account != null;
-             AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-                if (mAuth == null) {
-                    mAuth = FirebaseAuth.getInstance();
-                if (mAuth != null){
-                    mAuth.signInWithCredential(credential).addOnCompleteListener(this,task -> {
-                        if (task.isSuccessful()){
-                            FirebaseUser user = task.getResult().getUser();
-                            checkUserDatabaseLogin(user);
-                        }else{
-                            showErrorDialogMail();
-                        }
-                    });
-                }else {
-                    showGooglePlayServicesError();
-                }
-                }
-            }catch(ApiException e){
-                showErrorDialogMail();
-            }
-        }
     }
 
     private void attempLoginEmail() {
@@ -124,10 +92,15 @@ public class LoginActivity extends AppCompatActivity {
         } else if (loginPass.getText().length()==0){
             loginPassParent.setErrorEnabled(true);
             loginPassParent.setError(getString(R.string.login_pass_error));
-            
+
         }else{
             signInEmail();
         }
+    }
+
+    private void attempLoginGoogle() {
+        Intent signInIntent = googleSignIn.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     private void signInEmail() {
@@ -136,36 +109,53 @@ public class LoginActivity extends AppCompatActivity {
         }
         if (mAuth != null){
             mAuth.signInWithEmailAndPassword(loginEmail.getText().toString(),loginPass.getText().toString()).addOnCompleteListener(this,task -> {
-               if (!task.isSuccessful() || task.getResult().getUser()== null ){
-                 showErrorDialogMail();
-               } else if (!task.getResult().getUser().isEmailVerified()) {
-                  showErrorEmailVerified(task.getResult().getUser());
-               }else{
-                   FirebaseUser user = task.getResult().getUser();
-                   checkUserDatabaseLogin(user);
-               }
+                if (!task.isSuccessful() || task.getResult().getUser()== null ){
+                    showErrorDialogMail();
+                } else if (!task.getResult().getUser().isEmailVerified()) {
+                    showErrorEmailVerified(task.getResult().getUser());
+                }else{
+                    FirebaseUser user = task.getResult().getUser();
+                    checkUserDatabaseLogin(user);
+                }
             });
         }else{
             showGooglePlayServicesError();
         }
     }
 
-    private void showGooglePlayServicesError() {
-        Snackbar.make(loginButtonSignup, R.string.login_play_services_error, Snackbar.LENGTH_SHORT).setAction(R.string.login_download_gps, view -> {
-           try{
-               startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.gps_download_url))));
-           }catch (Exception ex){
-               startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.market_download_url))));
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN){
+           Task<GoogleSignInAccount> result = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try{
+             GoogleSignInAccount account = result.getResult(ApiException.class);
+             if (account != null){
+             AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+                if (mAuth == null)
+                    mAuth = FirebaseAuth.getInstance();
 
-           }
-        });
+                    mAuth.signInWithCredential(credential).addOnCompleteListener(this,task -> {
+                        if (task.isSuccessful()){
+                            FirebaseUser user = task.getResult().getUser();
+                            checkUserDatabaseLogin(user);
+                        }else{
+                            showErrorDialogMail();
+                        }
+                });
+            }else{
+                showErrorDialogMail();
+            }
+            }catch(ApiException e){
+                showErrorDialogMail();
+            }
+        }
     }
 
     private void checkUserDatabaseLogin(FirebaseUser user) {
-        //Dummy
-        //TODO: complete
         Toast.makeText(this,String.format(getString(R.string.login_completed), user.getEmail()), Toast.LENGTH_SHORT).show();
-        setContentView(R.layout.activity_menu);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     private void showErrorEmailVerified(FirebaseUser user) {
@@ -183,6 +173,17 @@ public class LoginActivity extends AppCompatActivity {
         })).setNegativeButton(R.string.login_verified_mail_error_cancel, (dialog, which) -> {
 
         }).show();
+    }
+
+    private void showGooglePlayServicesError() {
+        Snackbar.make(loginButtonSignup, R.string.login_play_services_error, Snackbar.LENGTH_SHORT).setAction(R.string.login_download_gps, view -> {
+            try{
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.gps_download_url))));
+            }catch (Exception ex){
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.market_download_url))));
+
+            }
+        });
     }
 
     private void showErrorDialogMail() {
@@ -214,3 +215,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 }
+
+
+
+
+
+
+

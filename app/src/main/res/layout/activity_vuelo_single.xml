@@ -189,9 +189,30 @@
             android:paddingBottom="10dp"
             android:text="Comprar"
             android:onClick="compra"/>
+        <Button
+            android:id="@+id/buttonOpinar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:paddingBottom="10dp"
+            android:text="Opinar"
+            android:onClick="opina"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewOpiniones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
 
 </LinearLayout>
